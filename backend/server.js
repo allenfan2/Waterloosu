@@ -5,6 +5,7 @@ const logger = require("morgan");
 const playerInfo = require("./playerInfo");
 const dailyStat = require("./dailyStat");
 const osuAPIKey = '259ac227b4133eddbb00cb52e15f47a635684f2e';
+const fetch = require("node-fetch");
 const API_PORT = 3001;
 const app = express();
 const router = express.Router();
@@ -32,21 +33,56 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // this is our get method
 // this method fetches all available data in our database
+const players = ["Ciao", "Megumi Kato","deetz","DollarPlus","influxd",""]
+
+function addPlayers(){
+    players.forEach(p => {
+        playerInfo.findOne({username: p}, (err, exist)=> {
+            if (!exist) {
+                fetch("https://osu.ppy.sh/api/get_user?k=" + osuAPIKey + "&u=" + p)
+                    .then(res => {
+                        return res.json();
+                    })
+                    .then(res => {
+                        const player = new playerInfo({
+                            id: Number(res[0].user_id),
+                            username: res[0].username,
+                            join_date: new Date(res[0].join_date),
+                            country: res[0].country,
+                        });
+                        player.save((error)=> {
+                            console.log(p+" has been added to the database!");
+                            if (error) {
+                                console.error(error);
+                            }
+                        });
+                    });
+               }
+        })
+
+    });
+}
+
+function dailyUpdate(){
+    players.forEach(p=> {
+        
+    })
+}
 
 
-const player = new playerInfo({
-    id: 1,
-    username: "Ciao",
-    join_date: new Date(),
-    country: 'CA',
-});
+//const player = new playerInfo({
+//    id: 1,
+//    username: "Ciao",
+//    join_date: new Date(),
+//    country: 'CA',
+//});
 
-player.save(function(error) {
-    console.log("Your bee has been saved!");
-if (error) {
-    console.error(error);
- }
-});
+//player.save(function(error) {
+//    console.log("Your player has been saved!");
+//if (error) {
+//    console.error(error);
+// }
+//});
 
 
 
@@ -100,7 +136,7 @@ if (error) {
 //});
 
 // append /api for our http requests
-app.use("/api", router);
-
-// launch our backend into a port
-app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
+//app.use("/api", router);
+//
+//// launch our backend into a port
+//app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
