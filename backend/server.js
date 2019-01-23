@@ -31,8 +31,6 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 //app.use(bodyParser.json());
 //app.use(logger("dev"));
 
-// this is our get method
-// this method fetches all available data in our database
 const players = ["Ciao", "Megumi Kato","deetz","DollarPlus","influxd",""]
 
 function addPlayers(){
@@ -63,30 +61,58 @@ function addPlayers(){
     });
 }
 
+
 function dailyUpdate(){
-    players.forEach(p=> {
-        
+    let playerQuery = playerInfo.find({},{'_id':0,'id':1})
+    playerQuery.exec()
+    .then((res) => { 
+        updateStats(res.map(player=>player.id))
     })
 }
 
+function updateStats(p_id){
+    const oldDate = new Date()
+    const dateNoTime = new Date(oldDate.toDateString())
+    p_id.forEach(player => {
+        dailyStat.findOne({id: player,date: dateNoTime}, (err, exist)=> {
+            if(!exist){
+                fetch("https://osu.ppy.sh/api/get_user?k=" + osuAPIKey + "&u=" + player)
+                .then(res => {
+                    return res.json();
+                })
+                .then(res => {
+                    const ds = new dailyStat({
+                        id: res[0].user_id,
+                        date: dateNoTime,
+                        playcount:  res[0].playcount,
+                        ranked_score:  res[0].ranked_score,
+                        total_score:  res[0].otal_score,
+                        pp_rank:  res[0].pp_rank,
+                        level:  res[0].level,
+                        pp_raw:  res[0].pp_raw,
+                        accuracy:  res[0].accuracy,
+                        total_seconds_played:  res[0].total_seconds_played,
+                        pp_country_rank:  res[0].pp_country_rank
+                    })
+                    ds.save((error)=>{
+                      console.log("User:"+ player +"s daily stats has been added to the database!");
+                      if (error) {
+                          console.error(error);
+                      }
+                     })
+                })
 
-//const player = new playerInfo({
-//    id: 1,
-//    username: "Ciao",
-//    join_date: new Date(),
-//    country: 'CA',
-//});
+            } else {
+                console.log("Entry already logged")
+            }  
+        })       
+    })   
+}       
 
-//player.save(function(error) {
-//    console.log("Your player has been saved!");
-//if (error) {
-//    console.error(error);
-// }
-//});
+dailyUpdate()
 
 
-
-
+//GET METHOD
 //router.get("/", (req, res) => {
 //  Data.find((err, data) => {
 //    if (err) return res.json({ success: false, error: err });
