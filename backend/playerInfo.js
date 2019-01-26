@@ -9,9 +9,7 @@ const DataSchema = new Schema(
     username: String,
     join_date: Date,
     country: String,
-  },
-  { timestamps: true }
+  }
 );
 
-// export the new Schema so we could modify it using Node.js
 module.exports = mongoose.model("playerInfo", DataSchema);

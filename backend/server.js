@@ -1,3 +1,5 @@
+const CronJob = require('cron').CronJob;
+const Promise = require('bluebird')
 const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -13,6 +15,8 @@ const router = express.Router();
 // DB
 const dbRoute = "mongodb://admin:CMqb9rhHgn4NHdH@ds257752.mlab.com:57752/waterloosu";
 
+mongoose.Promise = Promise
+
 // connects our back end code with the database
 mongoose.connect(
   dbRoute,
@@ -23,7 +27,7 @@ let db = mongoose.connection;
 
 db.once("open", () => console.log("connected to the database"));
 
-// checks if connection with the database is successful
+// DB connection error
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 //Logging
@@ -31,35 +35,75 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 //app.use(bodyParser.json());
 //app.use(logger("dev"));
 
-const players = ["Ciao", "Megumi Kato","deetz","DollarPlus","influxd",""]
+const players = ["Ciao","Megumi Kato","deetz","DollarPlus","influxd"]
 
-function addPlayers(){
-    players.forEach(p => {
-        playerInfo.findOne({username: p}, (err, exist)=> {
-            if (!exist) {
-                fetch("https://osu.ppy.sh/api/get_user?k=" + osuAPIKey + "&u=" + p)
-                    .then(res => {
-                        return res.json();
-                    })
-                    .then(res => {
-                        const player = new playerInfo({
-                            id: Number(res[0].user_id),
-                            username: res[0].username,
-                            join_date: new Date(res[0].join_date),
-                            country: res[0].country,
-                        });
-                        player.save((error)=> {
-                            console.log(p+" has been added to the database!");
-                            if (error) {
-                                console.error(error);
-                            }
-                        });
-                    });
-               }
-        })
 
-    });
+function refresh(){
+    const indexArray = players.map(p=>filterPlayers(p))
+    Promise.all(indexArray).then(
+        (doc)=>{
+            let newPlayer = []
+            for (i = 0; i<doc.length;++i){
+                if (doc[i] === null){
+                    newPlayer.push(players[i])
+                }
+            }
+            updatePlayers(newPlayer)
+        }
+    )
 }
+
+
+function filterPlayers(pname){
+    const query = playerInfo.findOne({username: pname});
+    const promise = query.exec()
+    return promise
+}
+
+
+function searchPlayer(pname){
+    return fetch("https://osu.ppy.sh/api/get_user?k=" + osuAPIKey + "&u=" + pname)
+     .then(res => {
+         return res.json();
+    }).then(res =>{
+             return res[0]
+    })
+}
+
+function updatePlayers(arr){
+    let addedArr = arr.map(p=>searchPlayer(p))
+    Promise.all(addedArr)
+    .then((res)=>{
+        addPlayer(res)
+    })
+    
+}
+
+function addPlayer(plist){
+    const confList = plist.map(p => {
+        const player = new playerInfo({
+            id: Number(p.user_id),
+            username: p.username,
+            join_date: new Date(p.join_date),
+            country: p.country,
+        });
+        console.log(p.username + " has been added to the database")
+        return player.save()
+    })
+    Promise.all(confList).then((res)=>{
+        dailyUpdate()
+    })
+}
+
+
+
+
+
+
+
+
+refresh()
+
 
 
 function dailyUpdate(){
@@ -86,7 +130,7 @@ function updateStats(p_id){
                         date: dateNoTime,
                         playcount:  res[0].playcount,
                         ranked_score:  res[0].ranked_score,
-                        total_score:  res[0].otal_score,
+                        total_score:  res[0].total_score,
                         pp_rank:  res[0].pp_rank,
                         level:  res[0].level,
                         pp_raw:  res[0].pp_raw,
@@ -95,30 +139,42 @@ function updateStats(p_id){
                         pp_country_rank:  res[0].pp_country_rank
                     })
                     ds.save((error)=>{
-                      console.log("User:"+ player +"s daily stats has been added to the database!");
+                      console.log("User:"+ player +"'s daily stat has been added to the database!");
                       if (error) {
                           console.error(error);
                       }
                      })
-                })
-
+                })            
             } else {
-                console.log("Entry already logged")
+                console.log("User:"+player+"'s entry today already logged")
             }  
         })       
     })   
 }       
 
-dailyUpdate()
+
+
+//var job = new CronJob ('5 0 * * *', ()=>{
+//    refresh()
+//},
+//null,true,'America/Toronto')
+
 
 
 //GET METHOD
-//router.get("/", (req, res) => {
-//  Data.find((err, data) => {
-//    if (err) return res.json({ success: false, error: err });
-//    res.json({ success: true data: data });
-//  });
-//});
+router.get("/getPlayers", (req, res) => {
+  playerInfo.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    res.json({ success: true, data: data });
+  });
+});
+
+router.get("/getplayerInfo", (req, res) => {
+    dailyStat.find((err, data) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true, data: data });
+    });
+  });
 
 //// this is our update method
 //// this method overwrites existing data in our database
@@ -130,6 +186,7 @@ dailyUpdate()
 //  });
 //});
 //
+
 //// this is our delete method
 //// this method removes existing data in our database
 //router.delete("/deleteData", (req, res) => {
@@ -140,6 +197,7 @@ dailyUpdate()
 //  });
 //});
 //
+
 //// this is our create methid
 //// this method adds new data in our database
 //router.post("/putData", (req, res) => {
@@ -161,8 +219,8 @@ dailyUpdate()
 //  });
 //});
 
-// append /api for our http requests
-//app.use("/api", router);
-//
-//// launch our backend into a port
-//app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
+//append /api for our http requests
+app.use("/api", router);
+
+// launch our backend into a port
+app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

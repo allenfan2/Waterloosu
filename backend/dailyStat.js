@@ -16,9 +16,7 @@ const DataSchema = new Schema(
     accuracy: Number,
     total_seconds_played: Number,
     pp_country_rank: Number
-  },
-  { timestamps: true }
+  }
 );
 
-// export the new Schema so we could modify it using Node.js
 module.exports = mongoose.model("dailyStat", DataSchema);
