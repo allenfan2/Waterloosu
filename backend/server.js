@@ -76,7 +76,6 @@ function updatePlayers(arr){
     .then((res)=>{
         addPlayer(res)
     })
-    
 }
 
 function addPlayer(plist){
@@ -95,14 +94,6 @@ function addPlayer(plist){
     })
 }
 
-
-
-
-
-
-
-
-refresh()
 
 
 
@@ -150,7 +141,7 @@ function updateStats(p_id){
             }  
         })       
     })   
-}       
+}
 
 
 
@@ -161,7 +152,7 @@ function updateStats(p_id){
 
 
 
-//GET METHOD
+//Get all players info
 router.get("/getPlayers", (req, res) => {
   playerInfo.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
@@ -169,12 +160,25 @@ router.get("/getPlayers", (req, res) => {
   });
 });
 
-router.get("/getplayerInfo", (req, res) => {
-    dailyStat.find((err, data) => {
+//get all of latest info
+router.get("/getlatestInfo", (req, res) => {
+    const p_id = req.params.id
+    const date = new Date(new Date().toDateString())
+    dailyStat.find({date:date},(err, data) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true, data: data });
     });
-  });
+});
+
+
+//get all stats of a specific player
+router.get("/getAllInfo/:id", (req, res) => {
+    const p_id = req.params.id
+    dailyStat.find({id:p_id},(err, data) => {
+      if (err) return res.json({ success: false, error: err });
+      res.json({ success: true, data: data });
+    });
+});
 
 //// this is our update method
 //// this method overwrites existing data in our database
