@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PlayerCard from './PlayerCard'
 
-export default function PlayerDisplayer(props) {
-  const Parray = props.pdata.map(p =><PlayerCard key={p.id} pname={p.username} joindate={p.join_date} country={p.country} />)
-  return (
-    <div>
-    {Parray}
-    </div>
-  )
+export default class PlayerDisplayer extends Component {
+  constructor(){
+    
+  }
+  render() {
+    const Parray = this.props.pdata.map(p =>
+      <PlayerCard {...p} key={p.id} />)
+    return (
+      <div className="pDisplay">
+        {Parray}
+      </div>
+    )
+  }
 }

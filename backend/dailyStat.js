@@ -7,6 +7,9 @@ const DataSchema = new Schema(
   {
     id: Number,
     date: Date,
+    username: String,
+    join_date: Date,
+    country: String,
     playcount: Number,
     ranked_score: Number,
     total_score: Number,

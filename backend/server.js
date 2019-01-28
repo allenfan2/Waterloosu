@@ -118,8 +118,11 @@ function updateStats(p_id){
                 .then(res => {
                     const ds = new dailyStat({
                         id: res[0].user_id,
+                        username: res[0].username,
                         date: dateNoTime,
                         playcount:  res[0].playcount,
+                        join_date: res[0].join_date,
+                        country: res[0].country,
                         ranked_score:  res[0].ranked_score,
                         total_score:  res[0].total_score,
                         pp_rank:  res[0].pp_rank,
@@ -146,32 +149,25 @@ function updateStats(p_id){
 
 
 //var job = new CronJob ('5 0 * * *', ()=>{
-//    refresh()
+ refresh()
 //},
 //null,true,'America/Toronto')
 
 
 
-//Get all players info
-router.get("/getPlayers", (req, res) => {
-  playerInfo.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    res.json({ success: true, data: data });
-  });
-});
 
-//get all of latest info
-router.get("/getlatestInfo", (req, res) => {
-    const p_id = req.params.id
+
+//get latest stats of all players
+router.get("/getInfo", (req, res) => {
     const date = new Date(new Date().toDateString())
+    const id = req.params.id
     dailyStat.find({date:date},(err, data) => {
       if (err) return res.json({ success: false, error: err });
       res.json({ success: true, data: data });
     });
 });
 
-
-//get all stats of a specific player
+//get all stats of a player
 router.get("/getAllInfo/:id", (req, res) => {
     const p_id = req.params.id
     dailyStat.find({id:p_id},(err, data) => {
@@ -179,6 +175,7 @@ router.get("/getAllInfo/:id", (req, res) => {
       res.json({ success: true, data: data });
     });
 });
+
 
 //// this is our update method
 //// this method overwrites existing data in our database
