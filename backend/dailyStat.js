@@ -18,7 +18,8 @@ const DataSchema = new Schema(
     pp_raw: Number,
     accuracy: Number,
     total_seconds_played: Number,
-    pp_country_rank: Number
+    pp_country_rank: Number,
+    events:Array
   }
 );
 

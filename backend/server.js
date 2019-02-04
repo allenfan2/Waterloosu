@@ -35,7 +35,8 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 //app.use(bodyParser.json());
 //app.use(logger("dev"));
 
-const players = ["Ciao","Megumi Kato","deetz","DollarPlus","influxd"]
+const players = ["Lux","Cyxsound","Feiri","ThunderBird2678","Ciao","karalis"
+                ,"Megumi Kato","deetz","DollarPlus","Kirakishou","influxd","LumenLogic"]
 
 
 function refresh(){
@@ -130,7 +131,8 @@ function updateStats(p_id){
                         pp_raw:  res[0].pp_raw,
                         accuracy:  res[0].accuracy,
                         total_seconds_played:  res[0].total_seconds_played,
-                        pp_country_rank:  res[0].pp_country_rank
+                        pp_country_rank:  res[0].pp_country_rank,
+                        events:[]
                     })
                     ds.save((error)=>{
                       console.log("User:"+ player +"'s daily stat has been added to the database!");
