@@ -4,22 +4,18 @@
 
 h1 {
   text-align:center;
-  color:white;
+  color:rgb(255, 100, 126);
 }
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
+
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Exo 2', sans-serif;;
+  font-family: 'Exo 2', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url(https://i.ytimg.com/vi/STn5V7Qw4yY/maxresdefault_live.jpg)
+  background: url(https://osu.ppy.sh/images/backgrounds/page-dark.png)
 }
 
 code {
@@ -32,14 +28,12 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 10px;
-  box-shadow: inset 0 0 5px grey; 
+  box-shadow: inset 0 0 3px grey; 
   background: #f1f1f1; 
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
   background: rgb(255, 125, 144); 
 }
 
@@ -64,8 +58,16 @@ code {
   background:rgb(255, 208, 216);
 }
 
+
 .container:nth-child(even){
   background: rgb(255, 164, 179)
+}
+
+.container:nth-child(odd) .pCard .profpicCont .topleft{
+  background: rgb(255, 164, 179)
+}
+.container:nth-child(even) .pCard .profpicCont .topleft{
+  background:rgb(255, 208, 216)
 }
 
 .Graph{
@@ -80,13 +82,31 @@ code {
   padding:10px;
 }
 
-.profpic{
+.profpicCont{
+  position: relative;
+}
+.profpicCont img{
   box-shadow: 1px 3px 7px #7D7D7D;
   width:100px;
   height:100px;
   border-radius:20px;
   order:1;
 }
+
+.topleft{
+  border-radius: 50%;
+  text-align: center;
+  width:20px;
+  height:20px;
+  font-size:14px;
+  position: absolute;
+  font-weight:bold;
+  top:-5px;
+  left:-5px;
+}
+
+
+
 
 .Stats{
   order: 1;
@@ -105,38 +125,81 @@ code {
 
 
 .Activity{
+  background-color:rgb(255, 228, 228);
   font-size:14px;
   order:3;
   margin-left:10px;
-  width:480px;
+  width:470px;
   max-height:100px;
-  padding:5px;
   border: dotted 2px;
   border-radius:10px;
   overflow-y: auto;
 }
 
-.Activity ul{
+.Feed{
+  padding:5px;
+}
+
+.Feed ul{
   list-style-type: circle;
+  padding-left:20px;
 }
 
-
-.container:nth-child(odd) .pCard .Activity{
+.container .pCard .Activity{
   border-color:rgb(255, 164, 179);
-}
-.container:nth-child(even) .pCard .Activity{
-  border-color:rgb(255, 208, 216);
 }
 
 
 .PDisplay{
-  overflow-y: scroll;
+  overflow:hidden;
   box-shadow: 1px 3px 7px #7D7D7D;
-  min-width: 800px;
-  max-width:800px;
-  max-height:850px;
-  height:80%;
+  width: 800px;
+  height:90%;
   margin: auto;
   border-radius:20px;
 }
 
+.PInfo{
+  overflow-y: auto;
+  height:800px;
+}
+
+.SortPlayer{
+  border-bottom: solid 1px rgb(255, 255, 255);
+  background-color:rgb(255, 168, 183);
+  padding:10px;
+}
+
+.SortPlayer label{
+  font-weight: bold;
+  color:#ffffff;
+	text-shadow:0px 1px 0px #ff8585;
+}
+
+.SortPlayer button{
+  outline:none;
+  display:inline-block;
+  padding:5px 5px;
+  border:0.1em solid #ffffff;
+  margin:0 4px 2px 0;
+  border-radius:1px;
+  box-sizing: border-box;
+  text-decoration:none;
+  font-family:'Exo 2',sans-serif;
+  font-weight:300;
+  color:#ffffff;
+  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  background-color:rgba(255, 255, 255, 0);
+  text-align:center;
+  transition: all 0.15s;
+}
+
+.SortPlayer button:hover{
+  font-weight:bold;
+  text-shadow: 0 0 2em rgba(255,255,255,1);
+  color:#FFFFFF;
+  border-color:#FFFFFF;
+}
+
+
+  

@@ -5,7 +5,7 @@ export default function Events(props) {
         return <li>{e}</li>
     })
     return (
-        <div>
+        <div className="Feed">
             <ul>{props.events.length === 0? <li>No recent activity</li>: displayEvent}</ul>
         </div>
     )

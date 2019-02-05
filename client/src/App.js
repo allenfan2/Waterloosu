@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import PlayerCard from './PlayerCard'
 
+
+
+
 class App extends Component {
   // initialize our state 
   constructor(){
@@ -9,6 +12,8 @@ class App extends Component {
       pdata: [],
       histData: [],
       collapsedpid: -1, 
+      sortedBy: "recent",
+      isReversed: false,
       intervalIsSet: false,
     }
   }
@@ -63,26 +68,72 @@ class App extends Component {
     fetch("http://localhost:3001/api/getInfo")
       .then(data => data.json())
       .then(res => {
-        this.setState({ pdata: res.data })
+        this.setState({ pdata: res.data.sort((a,b)=>{return a.pp_rank-b.pp_rank}) })
         this.getActivity()
       });
   };
 
+  handleClick = (e) => {
+    const { value } = e.target
+    if (value === this.state.sortedBy) {
+      this.setState(prevState =>{
+        return{isReversed: !prevState.isReversed}
+      })
+    } else {
+      this.setState({
+        sortedBy: value, isReversed: false
+      })
+    }
+  }
+
+  sortPList = (list) => {
+    const value = this.state.sortedBy
+    switch (value) {
+      case "recent":
+        return list.sort((a, b) => { return b.events.length - a.events.length })
+      case "rank":
+        return list.sort((a, b) => { return a.pp_rank - b.pp_rank })
+      case "join_date":
+        return list.sort((a, b) => { return new Date(a.join_date) - new Date(b.join_date) })
+      default:
+        console.log("test")
+    }
+  }
+
+
 
 
   render() {
-    const PlayerDisplay = this.state.pdata.map(p=>{
-      return <PlayerCard getHistData={this.getHistData} 
-      key={p.id} info={p}
+    const sortedList = this.sortPList(this.state.pdata)
+    const revereseList = this.state.isReversed? sortedList.reverse():sortedList;
+    let i = 0
+    const PlayerDisplay = revereseList.map(p=>{
+      i += 1
+      return <PlayerCard getHistData={this.getHistData}
+      key={i} info={p} pos={i}
       collapsed={this.state.collapsedpid === p.id ? true:false}
       data={this.state.collapsedpid === p.id ? this.state.histData : null }
       />
     })
     return (
-      <div className ="App">
+      <div className="App">
         <h1>Waterloosu</h1>
-        <div className="PDisplay"> 
-        {PlayerDisplay}
+        <div className="PDisplay">
+          <div className="SortPlayer">
+            <label>{this.state.isReversed ? "⯅" : "⯆"} Sort By: </label>
+            <button value="recent" onClick={this.handleClick}
+              style={this.state.sortedBy === "recent" ? { fontWeight: 'bolder' } : {}}>
+              Recently Active</button>
+            <button value="rank" onClick={this.handleClick}
+              style={this.state.sortedBy === "rank" ? { fontWeight: 'bolder' } : {}}>
+              PP/Rank</button>
+            <button value="join_date" onClick={this.handleClick}
+              style={this.state.sortedBy === "join_date" ? { fontWeight: 'bolder' } : {}}>
+              Join Date</button>
+          </div>
+          <div className="PInfo">
+            {PlayerDisplay}
+          </div>
         </div>
       </div>
     );

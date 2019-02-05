@@ -17,17 +17,21 @@ export default class PlayerCard extends Component {
   }
 
   render() {
-    const filter = this.props.info.events.map(e=>{
+    const filter = this.props.info.events.map(e => {
       return this.cleanText(e.display_html)
     })
     return (
       <div className="container">
         <div className="pCard">
-          <img className="profpic" src={"https://a.ppy.sh/" + this.props.info.id} alt="avatar load fail" />
+          <div className="profpicCont">
+            <img src={"https://a.ppy.sh/" + this.props.info.id} alt="avatar load fail" />
+            <div className="topleft">{this.props.pos}</div>
+          </div>
           <div className="Stats">
             <h3>{this.props.info.username}</h3>
             <p>PP: {this.props.info.pp_raw}</p>
             <p>Global Rank: {this.props.info.pp_rank}</p>
+            <p>Joined: {new Date(this.props.info.join_date).toLocaleDateString()}</p>
           </div>
           <div className="Activity">
             <Events events={filter}></Events>

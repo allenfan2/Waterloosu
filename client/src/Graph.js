@@ -12,7 +12,7 @@ export default function Graph(props) {
              margin={{top: 5, right: 5, left: 5, bottom: 5}}>
                 <XAxis dataKey="date" />
                 <YAxis />
-                <CartesianGrid stroke="#909090" fill='white' strokeDasharray="5 5"/>
+                <CartesianGrid stroke="#909090" fill='white' strokeDasharray="10 5"/>
                 <Tooltip />
                 <Line type="monotone" dataKey="pp_rank" stroke="#8884d8" />
             </LineChart>
