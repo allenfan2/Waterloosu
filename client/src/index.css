@@ -8,6 +8,7 @@ h1 {
 }
 
 ul {
+  list-style-type: none;
   margin: 0;
   padding: 0;
 }
@@ -52,19 +53,6 @@ code {
 .container{
   display:flex;
   flex-direction: column;
-  border-bottom: solid rgb(255, 140, 159) 1px;
-}
-
-.Graph{
-  padding-top:10px;
-  order:2;
-  background-color: rgb(253, 184, 194);
-}
-
-.pCard{
-  order:1;
-  display:flex;
-  padding:10px;
 }
 
 
@@ -72,8 +60,24 @@ code {
   border-bottom:none;
 }
 
+.container:nth-child(odd){
+  background:rgb(255, 208, 216);
+}
+
 .container:nth-child(even){
   background: rgb(255, 164, 179)
+}
+
+.Graph{
+  padding-top:10px;
+  order:2;
+  border-style: solid 2px black;
+}
+
+.pCard{
+  order:1;
+  display:flex;
+  padding:10px;
 }
 
 .profpic{
@@ -86,45 +90,41 @@ code {
 
 .Stats{
   order: 1;
-  flex-grow:1;
-  min-width: 100px;
+  width:150px;
   margin-left:10px;
-}
-
-.Events{
-  order:3;
-  flex-grow:4;
-  min-width: 480px;
-  max-width: 480px;
 }
 
 
 .toggle{
+  margin-left:5px;
   order:4;
   width:24px;
   height:24px;
-}
-
-.Events ul{
-  font-size:14px;
-  margin-left:15px;
+  outline:none;
 }
 
 
 .Activity{
-  max-height:65px;
-  min-height:auto;
-  margin-top:5px;
+  font-size:14px;
+  order:3;
+  margin-left:10px;
+  width:480px;
+  max-height:100px;
   padding:5px;
   border: dotted 2px;
   border-radius:10px;
   overflow-y: auto;
 }
 
-.container:nth-child(odd) .pCard .Events .Activity{
+.Activity ul{
+  list-style-type: circle;
+}
+
+
+.container:nth-child(odd) .pCard .Activity{
   border-color:rgb(255, 164, 179);
 }
-.container:nth-child(even) .pCard .Events .Activity{
+.container:nth-child(even) .pCard .Activity{
   border-color:rgb(255, 208, 216);
 }
 
@@ -132,11 +132,9 @@ code {
 .PDisplay{
   overflow-y: scroll;
   box-shadow: 1px 3px 7px #7D7D7D;
-  background:rgb(255, 208, 216);
   min-width: 800px;
   max-width:800px;
   max-height:850px;
-
   height:80%;
   margin: auto;
   border-radius:20px;

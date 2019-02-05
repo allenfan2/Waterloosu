@@ -11,7 +11,8 @@ export default class PlayerCard extends Component {
   }
 
   cleanText=(event)=> {
-    const ctext = event.replace(/<\/?[^>]+(>|$)/g, "");
+    let ctext = event.replace(/<\/?[^>]+(>|$)/g, "");
+    ctext = ctext.split(" ").slice(2).join(" ")
     return ctext
   }
 
@@ -28,11 +29,8 @@ export default class PlayerCard extends Component {
             <p>PP: {this.props.info.pp_raw}</p>
             <p>Global Rank: {this.props.info.pp_rank}</p>
           </div>
-          <div className="Events">
-            <h4>Events</h4>
-            <div className="Activity">
-              <Events events={filter}></Events>
-            </div>
+          <div className="Activity">
+            <Events events={filter}></Events>
           </div>
           <input className="toggle"
             type="image" alt="toggleButton"
