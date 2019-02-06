@@ -79,11 +79,20 @@ code {
 .pCard{
   order:1;
   display:flex;
+  flex-grow:1;
+  flex-wrap:wrap;
   padding:10px;
+}
+
+.topRow{
+  display:flex;
+  flex-shrink: 0;
 }
 
 .profpicCont{
   position: relative;
+  flex-shrink:0;
+  order:1
 }
 .profpicCont img{
   box-shadow: 1px 3px 7px #7D7D7D;
@@ -105,19 +114,17 @@ code {
   left:-5px;
 }
 
-
-
-
 .Stats{
-  order: 1;
-  width:150px;
+  order: 2;
+  flex-grow:1;
+  min-width:150px;
   margin-left:10px;
 }
 
 
 .toggle{
-  margin-left:5px;
-  order:4;
+  order:2;
+  margin-right:10px;
   width:24px;
   height:24px;
   outline:none;
@@ -125,16 +132,19 @@ code {
 
 
 .Activity{
+  order:3;
+  flex-grow:4;
+  width:auto;
+  min-width:250px;
+  max-height:100px;
   background-color:rgb(255, 228, 228);
   font-size:14px;
-  order:3;
-  margin-left:10px;
-  width:470px;
-  max-height:100px;
+  margin:10px;
   border: dotted 2px;
   border-radius:10px;
   overflow-y: auto;
 }
+
 
 .Feed{
   padding:5px;
@@ -152,16 +162,19 @@ code {
 
 .PDisplay{
   overflow:hidden;
-  box-shadow: 1px 3px 7px #7D7D7D;
-  width: 800px;
-  height:90%;
+  box-shadow: 1px 3px 7px rgb(173, 173, 173);
+  min-width: 350px;
+  width: 50%;
+  min-height:800px;
   margin: auto;
   border-radius:20px;
 }
 
 .PInfo{
-  overflow-y: auto;
+  min-height:750px;
   height:800px;
+  max-height:1700px;
+  overflow-y: scroll;
 }
 
 .SortPlayer{

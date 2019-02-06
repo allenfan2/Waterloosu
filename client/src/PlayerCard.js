@@ -22,6 +22,7 @@ export default class PlayerCard extends Component {
     })
     return (
       <div className="container">
+      <div className="topRow">
         <div className="pCard">
           <div className="profpicCont">
             <img src={"https://a.ppy.sh/" + this.props.info.id} alt="avatar load fail" />
@@ -36,14 +37,15 @@ export default class PlayerCard extends Component {
           <div className="Activity">
             <Events events={filter}></Events>
           </div>
-          <input className="toggle"
+        </div>
+        <input className="toggle"
             type="image" alt="toggleButton"
             src={this.props.collapsed ? "/assets/up.png" : "/assets/down.png"}
             onClick={() => this.props.getHistData(this.props.info.id)}
           />
-        </div>
-        {this.props.collapsed && <Graph data={this.props.data}/>}
       </div>
+        {this.props.collapsed && <Graph data={this.props.data}/>}
+    </div>
     )
   }
 }
