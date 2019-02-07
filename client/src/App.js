@@ -106,7 +106,6 @@ class App extends Component {
 
 
 
-
   render() {
     const loadingLabel = <h1>Loading...</h1>
     const sortedList = this.sortPList(this.state.pdata)
