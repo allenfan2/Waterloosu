@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import PlayerCard from './PlayerCard'
 
-
-
-
 class App extends Component {
   // initialize our state 
   constructor(){
@@ -21,7 +18,7 @@ class App extends Component {
   componentDidMount() {
     this.getPlayers();
     if (!this.state.intervalIsSet) {
-      let interval = setInterval(this.getPlayers, 600000);
+      let interval = setInterval(this.getPlayers, 900000);
       this.setState({ intervalIsSet: interval });
     }
   }
@@ -33,22 +30,10 @@ class App extends Component {
     }
   }
 
-  getActivity =()=>{
-      this.state.pdata.forEach(p=>{
-        fetch("https://osu.ppy.sh/api/get_user?k=259ac227b4133eddbb00cb52e15f47a635684f2e&u="+p.id)
-        .then(data=>data.json())
-        .then(res=>{
-          for(let i=0; i<this.state.pdata.length ;++i){
-            if(this.state.pdata[i].id === p.id){
-              let newdata = [...this.state.pdata]
-              let player ={...newdata[i]}
-              player.events = res[0].events
-              newdata[i]=player
-              this.setState({pdata:newdata})
-            }
-          }
-        })
-      })
+   getActivity = async(p) => {
+      return fetch("https://osu.ppy.sh/api/get_user?k=259ac227b4133eddbb00cb52e15f47a635684f2e&u="+ p)
+      .then(data => data.json())
+      .then(data => {return data})
   }
 
   getHistData=(id)=>{
@@ -57,7 +42,7 @@ class App extends Component {
     }else{
       this.setState({ collapsedpid: id })
     }
-    fetch("http://localhost:3001/api/getAllInfo/"+id.toString())
+    fetch("http://localhost:4000/api/getAllInfo/"+id.toString())
       .then(data => data.json())
       .then(res => {
         this.setState({ histData: res.data })
@@ -65,11 +50,30 @@ class App extends Component {
   }
 
   getPlayers = () => {
-    fetch("http://localhost:3001/api/getInfo")
+    fetch("http://localhost:4000/api/getInfo")
       .then(data => data.json())
       .then(res => {
-        this.setState({ pdata: res.data.sort((a,b)=>{return a.pp_rank-b.pp_rank}) })
-        this.getActivity()
+        let eventFetch = []
+        res.data.forEach(p => {
+          eventFetch.push(this.getActivity(p.id))
+        })
+        Promise.all(eventFetch)
+          .then(() => {
+            let dataArr = []
+            let prom2 = eventFetch.map(async (e) => {
+              e.then(e => dataArr.push(e[0]))
+            })
+            Promise.all(prom2).then(()=>{
+              res.data = res.data.sort((a,b)=>{return a.id-b.id})
+              dataArr = dataArr.sort((a,b)=>{return a.user_id-b.user_id})
+              for (let i=0; i<res.data.length;++i){
+                res.data[i].events=dataArr[i].events
+              }
+              this.setState({ pdata: res.data })
+              }
+            )
+          }
+          )
       });
   };
 
@@ -104,6 +108,7 @@ class App extends Component {
 
 
   render() {
+    const loadingLabel = <h1>Loading...</h1>
     const sortedList = this.sortPList(this.state.pdata)
     const revereseList = this.state.isReversed? sortedList.reverse():sortedList;
     let i = 0
@@ -132,7 +137,7 @@ class App extends Component {
               Join Date</button>
           </div>
           <div className="PInfo">
-            {PlayerDisplay}
+            {this.state.pdata.length === 0? loadingLabel : PlayerDisplay}
           </div>
         </div>
       </div>

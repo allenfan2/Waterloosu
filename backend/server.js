@@ -8,7 +8,7 @@ const playerInfo = require("./playerInfo");
 const dailyStat = require("./dailyStat");
 const osuAPIKey = '259ac227b4133eddbb00cb52e15f47a635684f2e';
 const fetch = require("node-fetch");
-const API_PORT = 3001;
+const API_PORT = 4000;
 const app = express();
 const router = express.Router();
 
@@ -149,14 +149,13 @@ function updateStats(p_id){
 }
 
 
+//append /api for our http requests
+app.use("/api", router);
 
-//var job = new CronJob ('5 0 * * *', ()=>{
- refresh()
-//},
-//null,true,'America/Toronto')
+// launch our backend into a port
+app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
 
-
-
+var job = new CronJob ('5 0 * * *', ()=> {refresh()},null,true,'America/Toronto')
 
 
 //get latest stats of all players
@@ -178,52 +177,3 @@ router.get("/getAllInfo/:id", (req, res) => {
     });
 });
 
-
-//// this is our update method
-//// this method overwrites existing data in our database
-//router.post("/updateData", (req, res) => {
-//  const { id, update } = req.body;
-//  Data.findOneAndUpdate(id, update, err => {
-//    if (err) return res.json({ success: false, error: err });
-//    return res.json({ success: true });
-//  });
-//});
-//
-
-//// this is our delete method
-//// this method removes existing data in our database
-//router.delete("/deleteData", (req, res) => {
-//  const { id } = req.body;
-//  Data.findOneAndDelete(id, err => {
-//    if (err) return res.send(err);
-//    return res.json({ success: true });
-//  });
-//});
-//
-
-//// this is our create methid
-//// this method adds new data in our database
-//router.post("/putData", (req, res) => {
-//  let data = new Data();
-//
-//  const { id, message } = req.body;
-//
-//  if ((!id && id !== 0) || !message) {
-//    return res.json({
-//      success: false,
-//      error: "INVALID INPUTS"
-//    });
-//  }
-//  data.message = message;
-//  data.id = id;
-//  data.save(err => {
-//    if (err) return res.json({ success: false, error: err });
-//    return res.json({ success: true });
-//  });
-//});
-
-//append /api for our http requests
-app.use("/api", router);
-
-// launch our backend into a port
-app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

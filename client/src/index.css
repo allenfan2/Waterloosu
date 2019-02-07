@@ -45,6 +45,8 @@ code {
 
 
 .container{
+  position: relative;
+  min-width: 350px;
   display:flex;
   flex-direction: column;
 }
@@ -66,14 +68,32 @@ code {
 .container:nth-child(odd) .pCard .profpicCont .topleft{
   background: rgb(255, 164, 179)
 }
+
+.container:nth-child(odd) .toggle{
+  background-color: rgb(255, 164, 179)
+}
+
 .container:nth-child(even) .pCard .profpicCont .topleft{
   background:rgb(255, 208, 216)
 }
 
+.container:nth-child(even) .toggle{
+  background-color: rgb(255, 208, 216)
+}
+
+
+.graphSelect{
+  margin:10px;
+  text-align: center;
+}
+.graphSelect label{
+  padding-left:4px;
+  font-size:13px;
+}
+
 .Graph{
-  padding-top:10px;
+  margin-left:-10px;
   order:2;
-  border-style: solid 2px black;
 }
 
 .pCard{
@@ -81,7 +101,9 @@ code {
   display:flex;
   flex-grow:1;
   flex-wrap:wrap;
-  padding:10px;
+  padding-left:10px;
+  padding-bottom:10px;
+  margin-top: - 10px;
 }
 
 .topRow{
@@ -90,15 +112,16 @@ code {
 }
 
 .profpicCont{
+  margin-top:10px;
   position: relative;
   flex-shrink:0;
   order:1
 }
 .profpicCont img{
   box-shadow: 1px 3px 7px #7D7D7D;
-  width:100px;
-  height:100px;
-  border-radius:20px;
+  width:110px;
+  height:110px;
+  border-radius:20%;
   order:1;
 }
 
@@ -115,34 +138,39 @@ code {
 }
 
 .Stats{
+  margin-top:10px;
   order: 2;
   flex-grow:1;
-  min-width:150px;
+  width:150px;
   margin-left:10px;
 }
 
 
 .toggle{
-  order:2;
-  margin-right:10px;
-  width:24px;
-  height:24px;
+  border-radius: 50%;
+  position: absolute;
+  margin-top:5px;
+  margin-right:5px;
+  right:0px;
+  width:20px;
+  height:20px;
   outline:none;
 }
 
 
 .Activity{
+  margin-top:10px;
+  margin-right:10px;
   order:3;
-  flex-grow:4;
-  width:auto;
-  min-width:250px;
-  max-height:100px;
+  flex-grow:12;
+  width:200px;
+  max-height:110px;
   background-color:rgb(255, 228, 228);
   font-size:14px;
-  margin:10px;
   border: dotted 2px;
   border-radius:10px;
-  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 
@@ -161,20 +189,21 @@ code {
 
 
 .PDisplay{
+  min-width: 400px;
   overflow:hidden;
   box-shadow: 1px 3px 7px rgb(173, 173, 173);
-  min-width: 350px;
   width: 50%;
   min-height:800px;
   margin: auto;
   border-radius:20px;
+  background-color:rgb(255, 168, 183);
 }
 
 .PInfo{
   min-height:750px;
   height:800px;
   max-height:1700px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .SortPlayer{
@@ -215,4 +244,5 @@ code {
 }
 
 
-  
+
+

@@ -6,7 +6,6 @@ export default class PlayerCard extends Component {
   constructor(){
     super()
     this.state ={
-
     }
   }
 
@@ -28,7 +27,7 @@ export default class PlayerCard extends Component {
             <img src={"https://a.ppy.sh/" + this.props.info.id} alt="avatar load fail" />
             <div className="topleft">{this.props.pos}</div>
           </div>
-          <div className="Stats">
+          <div className="Stats" >
             <h3>{this.props.info.username}</h3>
             <p>PP: {this.props.info.pp_raw}</p>
             <p>Global Rank: {this.props.info.pp_rank}</p>
@@ -44,7 +43,7 @@ export default class PlayerCard extends Component {
             onClick={() => this.props.getHistData(this.props.info.id)}
           />
       </div>
-        {this.props.collapsed && <Graph data={this.props.data}/>}
+        {this.props.collapsed &&  <Graph data={this.props.data}/>}
     </div>
     )
   }
